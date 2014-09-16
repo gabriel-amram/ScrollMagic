@@ -21,6 +21,21 @@ Greensock License info at http://www.greensock.com/licensing/
 @todo: bug: having multiple scroll directions with cascaded pins doesn't work (one scroll vertical, one horizontal)
 @todo: feature: optimize performance on debug plugin (huge drawbacks, when using many scenes)
 */
+
+// AMD support
+(function (factory) {
+    "use strict";
+    if (typeof define === 'function' && define.amd) {
+        // using AMD; register as anon module
+        define(['jquery'], function($) {
+        	return factory($, window);
+        });
+    } else {
+        // no AMD; invoke directly
+        factory( (typeof(jQuery) != 'undefined') ? jQuery : window.Zepto, window );
+    }
+}
+
 (function($, window) {
 	
 	"use strict";
@@ -52,6 +67,7 @@ Greensock License info at http://www.greensock.com/licensing/
 	 																										 If you don't use custom containers, trigger elements or have static layouts, where the positions of the trigger elements don't change, you can set this to 0 disable interval checking and improve performance.
 	 *
 	 */
+	 
 	var ScrollMagic = function(options) {
 
 		/*
@@ -2345,9 +2361,15 @@ Greensock License info at http://www.greensock.com/licensing/
 
 	// store version
 	ScrollMagic.prototype.version = "1.1.1";
-	// make global references available
-	window.ScrollScene = ScrollScene;
-	window.ScrollMagic = ScrollMagic;
+		
+	if(typeof define === 'function' && define.amd) {
+		return {ScrollMagic: ScrollMagic, 
+				ScrollScene: ScrollScene};
+	} else {
+		// make global references available
+		window.ScrollScene = ScrollScene;
+		window.ScrollMagic = ScrollMagic;
+	}
 
 	/*
 	 * ----------------------------------------------------------------
@@ -2418,4 +2440,4 @@ Greensock License info at http://www.greensock.com/licensing/
 		return ["block", "flex", "list-item", "table", "-webkit-box"].indexOf(str) > -1;
 	};
 
-})(jQuery, window);
+}));
